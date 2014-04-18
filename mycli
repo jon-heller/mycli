@@ -1,0 +1,23 @@
+#! /bin/bash
+
+if [ $# -lt 1 ]
+then
+        echo "Options:"
+        echo "create -- create new database"
+        exit
+fi
+
+read -p "MySQL Login: " mysqlLogin
+read -p "MySQL Password: " mysqlPass
+
+case "$1" in
+'create')
+    read -p "Database name: " dbName
+    mysql --user="$mysqlLogin" --password="$mysqlPass" --execute="CREATE DATABASE $dbName;"
+    read -p "Database user [press enter for none]: " dbUser
+    if [ ! -z "$dbUser" ]; then
+        read -p "Database user password: " dbPass
+        mysql --user="$mysqlLogin" --password="$mysqlPass" --execute="CREATE USER '$dbUser'@'localhost' IDENTIFIED BY '$dbPass'; GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'localhost'; FLUSH PRIVILEGES;";
+    fi
+;;
+esac
