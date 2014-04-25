@@ -8,6 +8,7 @@ then
         echo
         echo "list -- list databases"
         echo "create -- create new database and, optionally, database user"
+        echo "export -- export database to sql file"
         exit
 fi
 
@@ -22,16 +23,24 @@ if [ -z "$mysqlPassword" ]; then
 fi
 
 case "$1" in
-'create')
-    read -p "Database name: " dbName
-    mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE DATABASE $dbName;"
-    read -p "Database user [press enter for none]: " dbUser
-    if [ ! -z "$dbUser" ]; then
-        read -p "Database user password: " dbPass
-        mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE USER '$dbUser'@'localhost' IDENTIFIED BY '$dbPass'; GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'localhost'; FLUSH PRIVILEGES;";
-    fi
-;;
     'list')
         mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="SHOW DATABASES;"
+    ;;
+    'create')
+        read -p "Database name: " dbName
+        mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE DATABASE $dbName;"
+        read -p "Database user [press enter for none]: " dbUser
+        if [ ! -z "$dbUser" ]; then
+            read -p "Database user password: " dbPass
+            mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE USER '$dbUser'@'localhost' IDENTIFIED BY '$dbPass'; GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'localhost'; FLUSH PRIVILEGES;";
+        fi
+    ;;
+    'export')
+        if [ ! -z "$2" ]; then
+            dbName="$2"
+        else
+            read -p "Database name: " dbName
+        fi
+        mysqldump -u$mysqlLogin -p$mysqlPassword $dbName > $dbName-$(date +"%Y-%m-%d").sql
     ;;
 esac
