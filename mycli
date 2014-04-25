@@ -10,17 +10,24 @@ then
         exit
 fi
 
-read -p "MySQL Login: " mysqlLogin
-read -p "MySQL Password: " mysqlPass
+mysqlLogin=""
+mysqlPassword=""
+
+if [ -z "$mysqlLogin" ]; then
+    read -p "MySQL Login: " mysqlLogin    
+fi
+if [ -z "$mysqlPassword" ]; then
+    read -p "MySQL Password: " mysqlPassword
+fi
 
 case "$1" in
 'create')
     read -p "Database name: " dbName
-    mysql --user="$mysqlLogin" --password="$mysqlPass" --execute="CREATE DATABASE $dbName;"
+    mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE DATABASE $dbName;"
     read -p "Database user [press enter for none]: " dbUser
     if [ ! -z "$dbUser" ]; then
         read -p "Database user password: " dbPass
-        mysql --user="$mysqlLogin" --password="$mysqlPass" --execute="CREATE USER '$dbUser'@'localhost' IDENTIFIED BY '$dbPass'; GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'localhost'; FLUSH PRIVILEGES;";
+        mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE USER '$dbUser'@'localhost' IDENTIFIED BY '$dbPass'; GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'localhost'; FLUSH PRIVILEGES;";
     fi
 ;;
 esac
