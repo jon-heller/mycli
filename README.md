@@ -13,6 +13,14 @@ I was tired of trying to remember all of the various command and steps for relat
 
 ### Commands
 
+#### list
+
+List databases
+
 #### create
 
 Create a database and, optionally, a database user with full privileges to that database
+
+#### export
+
+Export a database to a .sql file
