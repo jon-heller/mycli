@@ -6,6 +6,7 @@ then
         echo
         echo "Commands:"
         echo
+        echo "list -- list databases"
         echo "create -- create new database and, optionally, database user"
         exit
 fi
@@ -30,4 +31,7 @@ case "$1" in
         mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE USER '$dbUser'@'localhost' IDENTIFIED BY '$dbPass'; GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'localhost'; FLUSH PRIVILEGES;";
     fi
 ;;
+    'list')
+        mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="SHOW DATABASES;"
+    ;;
 esac
