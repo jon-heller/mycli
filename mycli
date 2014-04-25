@@ -2,8 +2,11 @@
 
 if [ $# -lt 1 ]
 then
-        echo "Options:"
-        echo "create -- create new database"
+        echo "mycli <command>"
+        echo
+        echo "Commands:"
+        echo
+        echo "create -- create new database and, optionally, database user"
         exit
 fi
 
