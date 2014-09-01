@@ -8,6 +8,7 @@ then
         echo
         echo "list -- list databases"
         echo "create -- create new database and, optionally, database user"
+        echo "makeuser -- create user and grant privileges"
         echo "export -- export database to sql file"
         exit
 fi
@@ -30,6 +31,14 @@ case "$1" in
         read -p "Database name: " dbName
         mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE DATABASE $dbName;"
         read -p "Database user [press enter for none]: " dbUser
+        if [ ! -z "$dbUser" ]; then
+            read -p "Database user password: " dbPass
+            mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE USER '$dbUser'@'localhost' IDENTIFIED BY '$dbPass'; GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'localhost'; FLUSH PRIVILEGES;";
+        fi
+    ;;
+    'makeuser')
+        read -p "Database user [press enter for none]: " dbUser
+        read -p "Grant privileges on: " dbName
         if [ ! -z "$dbUser" ]; then
             read -p "Database user password: " dbPass
             mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE USER '$dbUser'@'localhost' IDENTIFIED BY '$dbPass'; GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'localhost'; FLUSH PRIVILEGES;";

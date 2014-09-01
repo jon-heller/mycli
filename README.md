@@ -21,8 +21,10 @@ List databases
 
 Create a database and, optionally, a database user with full privileges to that database
 
+#### makeuser
+
+Create user and grant privileges
+
 #### export
 
 Export a database to a .sql file
-
-Test
