@@ -17,11 +17,11 @@ I was tired of trying to remember all of the various command and steps for relat
 
 List databases
 
-#### create
+#### createdb
 
 Create a database and, optionally, a database user with full privileges to that database
 
-#### makeuser
+#### createuser
 
 Create user and grant privileges
 
