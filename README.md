@@ -6,7 +6,7 @@ I was tired of trying to remember all of the various command and steps for relat
 
 1. Clone, download, or use curl to get the script:
 
-`curl -o https://raw.githubusercontent.com/jon-heller/mycli/master/mycli`
+`curl -O https://raw.githubusercontent.com/jon-heller/mycli/master/mycli`
 
 2. Make it executable: `chmod +x mycli`
 3. Copy to the bin directory: `sudo cp mycli /usr/local/bin/mycli`
