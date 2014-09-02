@@ -7,41 +7,60 @@ then
         echo "Commands:"
         echo
         echo "list -- list databases"
-        echo "create -- create new database and, optionally, database user"
-        echo "makeuser -- create user and grant privileges"
+        echo "createdb -- create new database and, optionally, database user"
+        echo "createuser -- create user and grant privileges"
         echo "export -- export database to sql file"
         exit
 fi
 
 mysqlLogin=""
 mysqlPassword=""
+mycliCommand=""
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -u | --username )       shift
+                                mysqlLogin=$1
+                                ;;
+        -p | --password )       shift
+                                mysqlPassword=$1
+                                ;;
+        * )                     mycliCommand=$1
+    esac
+    shift
+done
 
 if [ -z "$mysqlLogin" ]; then
     read -p "MySQL Login: " mysqlLogin    
 fi
 if [ -z "$mysqlPassword" ]; then
-    read -p "MySQL Password: " mysqlPassword
+    read -p "MySQL Password: " -s mysqlPassword
 fi
 
-case "$1" in
+MYSQL=`which mysql`
+case $mycliCommand in
     'list')
-        mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="SHOW DATABASES;"
+        $MYSQL --user="$mysqlLogin" --password="$mysqlPassword" --execute="SHOW DATABASES;"
     ;;
-    'create')
+    'createdb')
         read -p "Database name: " dbName
-        mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE DATABASE $dbName;"
-        read -p "Database user [press enter for none]: " dbUser
+        mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE DATABASE IF NOT EXISTS $dbName;"
+        read -p "Database user [press enter to skip]: " dbUser
         if [ ! -z "$dbUser" ]; then
-            read -p "Database user password: " dbPass
-            mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE USER '$dbUser'@'localhost' IDENTIFIED BY '$dbPass'; GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'localhost'; FLUSH PRIVILEGES;";
+            read -p "Database user password: " -s dbPass
+            Q1="CREATE USER '$dbUser'@'localhost' IDENTIFIED BY '$dbPass';"
+            Q2="GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'%';"
+            Q3="FLUSH PRIVILEGES;"
+            SQL="${Q1}${Q2}${Q3}"
+            $MYSQL -u "$mysqlLogin" -p"$mysqlPassword" -e "$SQL"
         fi
     ;;
-    'makeuser')
+    'createuser')
         read -p "Database user [press enter for none]: " dbUser
         read -p "Grant privileges on: " dbName
         if [ ! -z "$dbUser" ]; then
-            read -p "Database user password: " dbPass
-            mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE USER '$dbUser'@'localhost' IDENTIFIED BY '$dbPass'; GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'localhost'; FLUSH PRIVILEGES;";
+            read -p "Database user password: " -s dbPass
+            mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE USER '$dbUser'@'localhost' IDENTIFIED BY '$dbPass'; GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'%'; FLUSH PRIVILEGES;";
         fi
     ;;
     'export')
