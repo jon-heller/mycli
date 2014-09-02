@@ -4,12 +4,26 @@ I was tired of trying to remember all of the various command and steps for relat
 
 ## Installing
 
-1. Clone (or download) to directory of your choice
-2. Make it executable: `chmod u+x mycli`
+1. Clone, download, or use curl to get the script:
+
+`curl -o https://raw.githubusercontent.com/jon-heller/mycli/master/mycli`
+
+2. Make it executable: `chmod +x mycli`
+3. Copy to the bin directory: `sudo cp mycli /usr/local/bin/mycli`
 
 ## Usage
 
-`mycli <command>`
+`mycli [args] <command>`
+
+### Arguments
+
+    -u [username]
+
+MySQL username
+
+    -p [password]
+
+MySQL password
 
 ### Commands
 
