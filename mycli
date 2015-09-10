@@ -43,7 +43,7 @@ case $mycliCommand in
         $MYSQL --user="$mysqlLogin" --password="$mysqlPassword" --execute="SHOW DATABASES;"
     ;;
     'createdb')
-        read -p "Database name: " dbName
+        read -p "\nDatabase name: " dbName
         mysql --user="$mysqlLogin" --password="$mysqlPassword" --execute="CREATE DATABASE IF NOT EXISTS $dbName;"
         read -p "Database user [press enter to skip]: " dbUser
         if [ ! -z "$dbUser" ]; then
